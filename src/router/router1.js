@@ -8,15 +8,25 @@ import CardVue from "../components/CardVue.vue";
 
 Vue.use(VueRouter);
 
+// TokenCheck
+const requireAuth = (to, from, next) => {
+  const isAuth = localStorage.getItem("token");
+  const loginPath = "/login?Path=${encodeURIComponent(to.path)}";
+  isAuth ? next() : next(loginPath);
+};
+
 const router = new VueRouter({
   mode: "history",
   routes: [
-    { path: "/", component: HomeVue },
+    { path: "/", component: HomeVue, beforeEnter: requireAuth },
     { path: "/login", component: LoginVue },
     {
       path: "/b/:boardId",
       component: BoardVue,
-      children: [{ path: "c/:cardId", component: CardVue }]
+      beforeEnter: requireAuth,
+      children: [
+        { path: "c/:cardId", component: CardVue, beforeEnter: requireAuth }
+      ]
     },
     { path: "*", component: NotFoundVue }
   ]
