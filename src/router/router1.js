@@ -11,24 +11,32 @@ Vue.use(VueRouter);
 // TokenCheck
 const requireAuth = (to, from, next) => {
   const isAuth = localStorage.getItem("token");
-  const loginPath = "/login?Path=${encodeURIComponent(to.path)}";
+  const loginPath = `/login?rPath=${encodeURIComponent(to.path)}`;
   isAuth ? next() : next(loginPath);
 };
 
 const router = new VueRouter({
   mode: "history",
   routes: [
-    { path: "/", component: HomeVue, beforeEnter: requireAuth },
-    { path: "/login", component: LoginVue },
+    {
+      path: "/",
+      component: HomeVue,
+      beforeEnter: requireAuth
+    },
+    {
+      path: "/login",
+      component: LoginVue
+    },
     {
       path: "/b/:boardId",
       component: BoardVue,
       beforeEnter: requireAuth,
-      children: [
-        { path: "c/:cardId", component: CardVue, beforeEnter: requireAuth }
-      ]
+      children: [{ path: "c/:cardId", component: CardVue }]
     },
-    { path: "*", component: NotFoundVue }
+    {
+      path: "*",
+      component: NotFoundVue
+    }
   ]
 });
 
