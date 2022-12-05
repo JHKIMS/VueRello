@@ -22,7 +22,9 @@
   </div>
 </template>
 <script>
-import axios from "axios";
+// import axios from 'axios'
+import { module } from '../api/apiModule'
+
 export default {
   data() {
     return {
@@ -37,13 +39,16 @@ export default {
     fetchData() {
       this.loading = true;
 
-      axios
-        .get("http://localhost:3000/boards")
-        .then(res => {
-          this.boards = res.data;
-        })
-        .catch(res => {
-          this.$router.replace("/login");
+      /*       axios.get("http://localhost:3000/boards")
+              .then(res => {
+                this.boards = res.data;
+              }) */
+      /*         .catch(res => {
+        this.$router.replace("/login");
+      }) */
+      module.fetch()
+        .then(data => {
+          this.boards = data
         })
         .finally(() => {
           this.loading = false;
@@ -67,4 +72,6 @@ export default {
   }
 };
 </script>
-<style></style>
+<style>
+
+</style>
