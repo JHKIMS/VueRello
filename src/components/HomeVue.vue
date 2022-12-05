@@ -2,8 +2,12 @@
   <div>
     Home_BoardList?
     <div v-if="loading">Loading...</div>
-    <div v-else>Api Result : <pre>{{ apiRes }}</pre></div>
-    <div v-if="error"><pre>Error: {{error}}</pre></div>
+    <div v-else>
+      <div v-for="b in boards" :key="b.id">
+        {{ b }}
+      </div>
+    </div>
+    <!-- <div v-if="error"><pre>Error: {{error}}</pre></div> -->
     <ul>
       <li>
         <router-link to="/b/1">Board_1</router-link>
@@ -18,12 +22,12 @@
   </div>
 </template>
 <script>
-import axios from 'axios';
+import axios from "axios";
 export default {
   data() {
     return {
       loading: false,
-      apiRes: "",
+      boards: []
     };
   },
   created() {
@@ -33,18 +37,19 @@ export default {
     fetchData() {
       this.loading = true;
 
-      axios.get('http://localhost:3000/health')
-      .then(res=>{
-        this.apiRes = res.data
-      })
-      .catch(res => {
-        this.error = res.response.data
-      })
-      .finally(()=>{
-        this.loading = false
-      })
+      axios
+        .get("http://localhost:3000/boards")
+        .then(res => {
+          this.boards = res.data;
+        })
+        .catch(res => {
+          this.$router.replace("/login");
+        })
+        .finally(() => {
+          this.loading = false;
+        });
 
-/*       const req = new XMLHttpRequest();
+      /*       const req = new XMLHttpRequest();
 
       req.open("GET", "http://localhost:3000/health");
 
@@ -58,8 +63,8 @@ export default {
           response: JSON.parse(req.response),
         };
       }); */
-    },
-  },
+    }
+  }
 };
 </script>
 <style></style>
