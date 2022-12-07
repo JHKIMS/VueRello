@@ -34,18 +34,24 @@
         </a>
       </div>
     </div>
+    <AddBoard v-if="isAddBoard" @close="isAddBoard=false" @submit="onAddBoard"/>
   </div>
 </template>
 <script>
 // import axios from 'axios'
 import { module } from '../api/apiModule'
+import AddBoard from './AddBoard.vue'
 
 export default {
+  components: {
+    AddBoard
+  },
   data() {
     return {
       loading: false,
       boards: [],
-      error: ''
+      error: '',
+      isAddBoard: false,
     }
   },
   created() {
@@ -68,7 +74,12 @@ export default {
         })
     },
     addBoard() {
-      console.log('addBoard()')
+      this.isAddBoard = true
+    },
+    onAddBoard(title){
+      console.log(title);
+      module.create(title)
+        .then(() => this.fetchData())
     }
   }
   /*   data() {
